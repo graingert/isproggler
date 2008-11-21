@@ -72,8 +72,8 @@ import mbid
 
 
 
-_version_ = "1.1.2"
-_build_ = 200800804
+_version_ = "1.1.3"
+_build_ = 20081120
 _threaded_ = False #TODO
 
 local = {'debug': False,
@@ -133,13 +133,6 @@ class Scrobbler:
         self.lastserverresponse = [True,"",0]
         self.pausesubmissions = False
         self.disablesubmissions = False
-        self.tzoffset = self.gettzoffset()
-
-    def gettzoffset(self):
-      if time.daylight:
-        return -time.altzone
-      else:
-        return -time.timezone
 
     def submissionstate(self,mode=None,b=None):
         """Gets or sets the submission state."""
@@ -467,7 +460,7 @@ class Scrobbler:
             else:
                 submission += "&"+"m["+str(n)+"]="+""
             submission += "&"+"l["+str(n)+"]="+str(song['duration'])
-            submission += "&"+"i["+str(n)+"]="+str(times.isotounix(str(song['time']), self.tzoffset))
+            submission += "&"+"i["+str(n)+"]="+str(times.isotounix(str(song['time']), -time.timezone))
             submission += "&"+"r["+str(n)+"]=" #Rating, skip this
             submission += "&"+"n["+str(n)+"]=" #FIXME - This is the Track Number, need to get this in itunes.py
             submission += "&"+"o["+str(n)+"]=P" #Source, hardcoded to "P - Chosen by the user"

@@ -10,10 +10,13 @@ wxFRAME_NO_TASKBAR, wxBITMAP_TYPE_PNG, wxBITMAP_TYPE_ICO, wxDLG_PNT, \
 wxHORIZONTAL, wxVERTICAL, wxALIGN_CENTER, wxALIGN_RIGHT, wxTE_PASSWORD, \
 wxTE_READONLY, wxDLG_SZE, EVT_TIMER, EVT_MENU, EVT_CHECKBOX, EVT_BUTTON, \
 EVT_TASKBAR_RIGHT_UP, EVT_TASKBAR_LEFT_DCLICK, EVT_LEFT_DOWN, true, false
+from wx import Point, Colour
+from wx.lib.hyperlink import HyperLinkCtrl
 from sys import exit, argv
 from os import path, getenv
 from random import choice
 from webbrowser import open_new
+from urllib import quote
 from urllib2 import urlopen
 from socket import setdefaulttimeout
 import md5
@@ -72,6 +75,11 @@ wxID_PLAYING = 3005
 wxID_LASTSUB = 3006
 wxID_ITUNES = 3007
 wxID_OPENLOG = 3008
+wxID_PLAYTRK = 3009
+wxID_PLAYART = 3010
+wxID_LASTART = 3011
+wxID_LASTTRK = 3012
+wxID_PROFILE = 3013
 
 PREFS_WIDTH = 350
 PREFS_HEIGHT = 400
@@ -363,23 +371,32 @@ class StatsDialog(wxDialog):
         self.successfullsubmissions = wxStaticText(self, wxID_SUCCSUBS, "0", wxDLG_PNT(self,175,35))
 
         wxStaticText(self, -1, "Last Submitted Song:", wxDLG_PNT(self,7,55))
-        self.lastsubmitted = wxStaticText(self, wxID_PLAYING, "", wxDLG_PNT(self,7,65))
-        wxStaticText(self, -1, "Playing Song:", wxDLG_PNT(self,7,80))
-        self.playingsong = wxStaticText(self, wxID_LASTSUB, "", wxDLG_PNT(self,7,90))  
-        wxStaticText(self, -1, "iTunes Status:", wxDLG_PNT(self,7,105))
-        self.itunesstatus = wxStaticText(self, wxID_ITUNES, "", wxDLG_PNT(self,7,115))       
-        wxStaticText(self, -1, "Last Server Response:", wxDLG_PNT(self,7,130))
-        self.lastresponse = wxStaticText(self, wxID_ITUNES, "", wxDLG_PNT(self,7,140))
-        
+        wxStaticText(self, -1, "Playing Song:", wxDLG_PNT(self,7,90))
+        wxStaticText(self, -1, "iTunes Status:", wxDLG_PNT(self,7,127))
+        self.itunesstatus = wxStaticText(self, wxID_ITUNES, "", wxDLG_PNT(self,95,127))       
+        wxStaticText(self, -1, "Last Server Response:", wxDLG_PNT(self,7,137))
+        self.lastresponse = wxStaticText(self, wxID_ITUNES, "", wxDLG_PNT(self,95,137))
+
+        self.lnkNowPlayingTrack = HyperLinkCtrl(self, wxID_PLAYTRK, '', Point(10,163), URL='')
+        self.lnkNowPlayingArtist = HyperLinkCtrl(self, wxID_PLAYART, '', Point(10,177), URL='')
+
+        self.lnkLastPlayedTrack = HyperLinkCtrl(self, wxID_LASTTRK, '', Point(10,105), URL='')
+        self.lnkLastPlayedArtist = HyperLinkCtrl(self, wxID_LASTART, '', Point(10,119), URL='')
+
+        self.lnkProfile = HyperLinkCtrl(self, wxID_PROFILE, 'Profile', Point(10,246),
+                                        URL='http://last.fm/user/%s' % main.prefs['username'])
+
+        self.lnkProfile.SetColours(visited=Colour(0, 0, 255))
+        self.lnkNowPlayingTrack.SetColours(visited=Colour(0, 0, 255))
+        self.lnkLastPlayedTrack.SetColours(visited=Colour(0, 0, 255))
+        self.lnkNowPlayingArtist.SetColours(visited=Colour(0, 0, 255))
+        self.lnkLastPlayedArtist.SetColours(visited=Colour(0, 0, 255))
+
         #openlogbutton = wxButton(self, wxID_OPENLOG, "Open Log")
-        okbutton = wxButton(self, wxID_OK, "OK")
 
         #self.hbuttonbox_openlog = wxBoxSizer(wxHORIZONTAL)
         #self.hbuttonbox_openlog.Add(openlogbutton)
         #self.hbuttonbox_openlog.Add((7, 7))
-        self.hbuttonbox_okbutton = wxBoxSizer(wxHORIZONTAL)
-        self.hbuttonbox_okbutton.Add(okbutton)
-        self.hbuttonbox_okbutton.Add((7, 7))
         #self.hbuttonbox.Add((-1,-1),-1, wxEXPAND|wxALL)
         #self.hbuttonbox.Add(okbutton, 0, wxALIGN_RIGHT)
         #self.hbuttonbox.Add((7, 7))
@@ -387,19 +404,11 @@ class StatsDialog(wxDialog):
         #self.gridsizer = wxGridSizer(2,0,0)
         #self.gridsizer.AddMany([openlogbutton,okbutton])
 
-        self.box = wxBoxSizer(wxVERTICAL)
-        self.box.Add((-1,-1), -1, wxGROW|wxALL)
         #self.box.Add(self.hbuttonbox_openlog, 0, wxALIGN_RIGHT)
         #self.box.Add((7, 7))
-        self.box.Add(self.hbuttonbox_okbutton, 0, wxALIGN_RIGHT)
-        self.box.Add((7, 7))
 
-        self.SetSizer(self.box)
-        okbutton.SetDefault()
- 
-        wxButton(self, wxID_OPENLOG, "Open Log", wxDLG_PNT(self,7,165))
-        #wxButton(self, wxID_OK, "OK", wxDLG_PNT(self,140,165))
-        #wxButton(self, wxID_OK, "OK", wxDLG_PNT(self,140,165)).SetDefault()
+        wxButton(self, wxID_OK, "OK", wxDLG_PNT(self,140,168))
+        wxButton(self, wxID_OPENLOG, "Open Log", wxDLG_PNT(self,7,168))
 
         self.SetValues()
 
@@ -465,13 +474,39 @@ class StatsDialog(wxDialog):
         self.successfullsubmissions.SetLabel(str(s.successfullsubmissions))
         
         if s.lastsubmitted != {}:
-            self.lastsubmitted.SetLabel("\"%s\" by %s" % (s.lastsubmitted['name'].replace('&','&&'),s.lastsubmitted['artist'].replace('&','&&')))
+            self.lnkLastPlayedTrack.SetURL("http://last.fm/music/%s/_/%s" % (quote(s.lastsubmitted['artist'].encode('utf-8')),
+                                                                             quote(s.lastsubmitted['name'].encode('utf-8'))))
+            try:
+                self.lnkLastPlayedTrack.SetLabel(s.lastsubmitted['name'])
+            except:
+                self.lnkLastPlayedTrack.SetLabel('track contains non-displayable characters')
+            self.lnkLastPlayedArtist.SetURL("http://last.fm/music/%s" % (quote(s.lastsubmitted['artist'].encode('utf-8'))))
+            try:
+                self.lnkLastPlayedArtist.SetLabel(s.lastsubmitted['artist'])
+            except:
+                self.lnkLastPlayedArtist.SetLabel('artist contains non-displayable characters')
+
         playingsong = s.playingsong
 
         if playingsong != None:
-            self.playingsong.SetLabel("\"%s\" by %s" % (playingsong['name'].replace('&','&&'),playingsong['artist'].replace('&','&&')))
+            self.lnkNowPlayingTrack.SetURL("http://last.fm/music/%s/_/%s" % (quote(playingsong['artist'].encode('utf-8')),
+                                                                             quote(playingsong['name'].encode('utf-8'))))
+            self.lnkNowPlayingArtist.SetURL("http://last.fm/music/%s" % (quote(playingsong['artist'].encode('utf-8'))))
+            try:
+                self.lnkNowPlayingTrack.SetLabel(playingsong['name'])
+            except:
+                self.lnkNowPlayingTrack.SetLabel('track contains non-displayable characters')
+
+            try:
+                self.lnkNowPlayingArtist.SetLabel(playingsong['artist'])
+            except:
+                self.lnkNowPlayingArtist.SetLabel('artist contains non-displayable characters')
+
         else:
-            self.playingsong.SetLabel("")
+            self.lnkNowPlayingTrack.SetURL('')
+            self.lnkNowPlayingTrack.SetLabel('')
+            self.lnkNowPlayingArtist.SetURL('')
+            self.lnkNowPlayingArtist.SetLabel('')
         
         try:
             if itunes.Events.suspended:
@@ -918,7 +953,10 @@ class TaskBarApp(wxFrame):
 
     def SetIconQuote(self):
         if self.quotes and s.lastsubmitted != {}:
-            return "\"%s\" by %s" % (s.lastsubmitted['name'],s.lastsubmitted['artist'])
+            try:
+              return ("\"%s\" by %s" % (s.lastsubmitted['name'],s.lastsubmitted['artist'])).encode('utf-8')
+            except:
+              return choice(quotes.quotes)
         else:
             return choice(quotes.quotes)
 
