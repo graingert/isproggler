@@ -465,11 +465,11 @@ class StatsDialog(wxDialog):
         self.successfullsubmissions.SetLabel(str(s.successfullsubmissions))
         
         if s.lastsubmitted != {}:
-            self.lastsubmitted.SetLabel("\"%s\" by %s" % (s.lastsubmitted['name'],s.lastsubmitted['artist']))
+            self.lastsubmitted.SetLabel("\"%s\" by %s" % (s.lastsubmitted['name'].replace('&','&&'),s.lastsubmitted['artist'].replace('&','&&')))
         playingsong = s.playingsong
 
         if playingsong != None:
-            self.playingsong.SetLabel("\"%s\" by %s" % (playingsong['name'],playingsong['artist']))
+            self.playingsong.SetLabel("\"%s\" by %s" % (playingsong['name'].replace('&','&&'),playingsong['artist'].replace('&','&&')))
         else:
             self.playingsong.SetLabel("")
         
@@ -911,8 +911,11 @@ class TaskBarApp(wxFrame):
             self.tbi.Destroy()
         except:
             pass
-        if itunes.connected:
-            itunes.cleanup()
+        try:
+            if itunes.connected:
+                itunes.cleanup()
+        except:
+            pass
         log.verb("Exiting...")
         exit()
 
@@ -983,4 +986,3 @@ if __name__ == '__main__':
     s.lastserverresponse.append("Debug")
     app = MyApp(0)
     app.MainLoop()
-
