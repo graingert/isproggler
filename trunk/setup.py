@@ -5,7 +5,7 @@
 
 # Change this to the root location
 #root = "Z:\\iSproggler"
-#root = "C:\\isproggler"
+root = "C:\\Projects\\iSproggler\\src"
 
 # The following extensions are required
 
@@ -13,7 +13,7 @@
 http://www.py2exe.org/
 http://www.wxpython.org/"""
 
-deployment = True
+deployment = False
 
 from distutils.core import setup
 import py2exe
@@ -25,7 +25,7 @@ from initimages import initimages
 import tarfile
 import zipfile
 
-root = os.path.split(sys.argv[0])[0]
+#root = os.path.split(sys.argv[0])[0]
 print "Root: ",root
 
 print "\nPackaging iSproggler version %s\n" % main._version_
@@ -124,7 +124,7 @@ print
 
 setup(
     options = {"py2exe": {"typelibs":
-                          [('{9E93C96F-CF0D-43F6-8BA8-B807A3370712}', 0, 1, 9)],
+                          [('{9E93C96F-CF0D-43F6-8BA8-B807A3370712}', 0, 1, 11)],
                           "optimize": 2,
                           #"packages": ["encodings"],
                           "bundle_files": 1,
@@ -137,7 +137,7 @@ setup(
 
                 "dest_base" : "iSproggler",
 
-                "icon_resources": [(1, root+"\\icon.ico")],
+                "icon_resources": [(1, ".\\icon.ico")],
 
                 "version": main._version_,
 
@@ -147,12 +147,13 @@ setup(
 )
 
 os.remove(os.path.join(os.path.join(root,"build"),"w9xpopen.exe"))
+
 print
 if deployment:
     print "Compressing executable..."
     upx()
-print "Creating ZIP archive..."
-zipapp()
+#print "Creating ZIP archive..."
+#zipapp()
 
 #if raw_input("Upload to server? [y/n]\n").tolower() == "y":
 #   ftpupload()
