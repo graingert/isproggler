@@ -911,11 +911,8 @@ class TaskBarApp(wxFrame):
             self.tbi.Destroy()
         except:
             pass
-        try:
-            if itunes.connected:
-                itunes.cleanup()
-        except:
-            pass
+        if itunes.connected:
+            itunes.cleanup()
         log.verb("Exiting...")
         exit()
 

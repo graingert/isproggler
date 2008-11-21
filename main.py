@@ -42,6 +42,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import sys
 import os
 import time
+import times
 import codecs
 import urllib
 import urllib2
@@ -71,8 +72,8 @@ import mbid
 
 
 
-_version_ = "1.1.1"
-_build_ = 20080715
+_version_ = "1.1.2"
+_build_ = 200800804
 _threaded_ = False #TODO
 
 local = {'debug': False,
@@ -132,6 +133,13 @@ class Scrobbler:
         self.lastserverresponse = [True,"",0]
         self.pausesubmissions = False
         self.disablesubmissions = False
+        self.tzoffset = self.gettzoffset()
+
+    def gettzoffset(self):
+      if time.daylight:
+        return -time.altzone
+      else:
+        return -time.timezone
 
     def submissionstate(self,mode=None,b=None):
         """Gets or sets the submission state."""
@@ -459,14 +467,14 @@ class Scrobbler:
             else:
                 submission += "&"+"m["+str(n)+"]="+""
             submission += "&"+"l["+str(n)+"]="+str(song['duration'])
-            submission += "&"+"i["+str(n)+"]="+str(song['time'])
+            submission += "&"+"i["+str(n)+"]="+str(times.isotounix(str(song['time']), self.tzoffset))
             submission += "&"+"r["+str(n)+"]=" #Rating, skip this
             submission += "&"+"n["+str(n)+"]=" #FIXME - This is the Track Number, need to get this in itunes.py
             submission += "&"+"o["+str(n)+"]=P" #Source, hardcoded to "P - Chosen by the user"
             n += 1
 
         try:
-            log.verb("Last submitted song %s" % time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(self.lastsong['time'])))
+            log.verb("Last submitted song %s UTC" % self.lastsong['time'])
         except:
             pass
 
@@ -551,10 +559,10 @@ class Scrobbler:
             if len(songs) > 1:
                 listofsongs = ""
                 for song in songs:
-                    listofsongs += "\"%s\" by %s [%s], " % (song['name'],song['artist'],time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(song['time'])))
+                    listofsongs += "\"%s\" by %s [%s UTC], " % (song['name'],song['artist'],song['time'])
                 log.info("%s submitted" % listofsongs[0:-2])
             else:
-                log.info("\"%s\" by %s [%s] submitted" % (song['name'],song['artist'],time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(song['time']))))
+                log.info("\"%s\" by %s [%s UTC] submitted" % (song['name'],song['artist'],song['time']))
             self.subinterval = 1
             log.debug("Setting submission interval to 1")
             return True
@@ -638,7 +646,7 @@ class Scrobbler:
         submission += "&n=" #FIXME - This is the Track Number, need to get this in itunes.py
 
         try:
-            log.verb("Now Playing submitted song %s" % time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(self.lastsong['time'])))
+            log.verb("Set Now Playing %s" % time.strftime("%Y-%m-%d %H:%M:%S",time.localtime()))
         except:
             pass
 
@@ -701,7 +709,7 @@ class Scrobbler:
     def addsong(self):
         """Takes a playing song and feeds it to submit()."""
         self.playingsong['mbid'] = self.getMBID(self.playingsong)
-        self.playingsong['time'] = int(time.time())-int(self.playingsong['position'])
+        self.playingsong['time'] = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(time.time()-int(self.playingsong['position'])))
         if self.submit([self.playingsong.copy()]):
             log.verb("Submission successful")
         else:
@@ -723,7 +731,7 @@ class Scrobbler:
     def addsongtocache(self):
         """Takes a playing song and caches it."""
         self.playingsong['mbid'] = self.getMBID(self.playingsong)
-        self.playingsong['time'] = int(time.time())-int(self.playingsong['position'])
+        self.playingsong['time'] = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(time.time()-int(self.playingsong['position'])))
         if f.cacheadd(self.playingsong.copy()):
             self.songsqueued += 1
         #song hasn't failed, but we don't want to keep checking it
@@ -829,8 +837,8 @@ class Scrobbler:
                 if s.handshaked:
                     self.submitcache()
             else:
-                MessageBox(0,"No songs found in playlist \"%s\" after the last iTunes- or iPod-played song \"%s\" played at %s, be sure to select Update iPod before playing songs in iTunes" % (main.local['playlistname'],s.lastsong['name'],time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(s.lastsong['time']))),"iSproggler",1)
-                log.error("No songs found in playlist \"%s\" after the last iTunes- or iPod-played song \"%s\" played at %s, be sure to select Update iPod before playing songs in iTunes" % (main.local['playlistname'],s.lastsong['name'],time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(s.lastsong['time']))))
+                MessageBox(0,"No songs found in playlist \"%s\" after the last iTunes- or iPod-played song \"%s\" played at %s UTC, be sure to select Update iPod before playing songs in iTunes" % (main.local['playlistname'],s.lastsong['name'],s.lastsong['time']),"iSproggler",1)
+                log.error("No songs found in playlist \"%s\" after the last iTunes- or iPod-played song \"%s\" played at %s UTC, be sure to select Update iPod before playing songs in iTunes" % (main.local['playlistname'],s.lastsong['name'],s.lastsong['time']))
                 return False
         else:
             self.manualipoderror = "Unable to check for iPod-played songs until a song is played in iTunes"
@@ -961,7 +969,7 @@ class Files:
 
     def songhistorywrite(self, song):
         """Records played (not necessarily submitted) songs to compare with the iTunes Library."""
-        song['time'] = int(time.time())-int(song['position'])
+        song['time'] = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(time.time()-int(song['position'])))
         s.lastsong = song.copy()
         self._writehistory(song)
 
@@ -975,17 +983,17 @@ class Files:
             #check if song already exists in cache
             try:
                 cachedlist.index(song)
-                log.warning("The song \"%s\" is already cached (play count: %d, play date (minus duration): %s)" % (song['name'],song['playcount'],time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(song['time']))))
+                log.warning("The song \"%s\" is already cached (play count: %d, play date (minus duration): %s UTC)" % (song['name'],song['playcount'],song['time']))
             except ValueError:
                 cachedlist.append(song)
                 s.lastsong = song.copy()
-                log.info("Adding \"%s\" by %s to the submission queue [%s]" % (song['name'],song['artist'],time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(song['time']))))
+                log.info("Adding \"%s\" by %s to the submission queue [%s UTC]" % (song['name'],song['artist'],song['time']))
             self._pickle("iSproggler Cache.pkl",cachedlist)
             return True
         except (IOError, EOFError), err:
             try:
                 log.verb("Creating cache file")
-                log.info("Adding \"%s\" by %s to the submission queue [%s]" % (song['name'],song['artist'],time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(song['time']))))
+                log.info("Adding \"%s\" by %s to the submission queue [%s UTC]" % (song['name'],song['artist'],song['time']))
                 self._pickle("iSproggler Cache.pkl",[song])
                 return True
             except (IOError, EOFError), err:
@@ -1400,6 +1408,11 @@ class Main:
             return
         try:
             s.playingsong = itunes.getsong().copy()
+            try:
+                if s.playingsong['id'] != s.lastnowplayedid:
+                    s.nowplaying(s.playingsong.copy())
+            except:
+                pass # If this fails, it's not the end of the world, so move on.
             try:
                 if s.playingsong['id'] != s.lastnowplayedid:
                     s.nowplaying(s.playingsong.copy())
