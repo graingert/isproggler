@@ -5,7 +5,7 @@
 
 # Change this to the root location
 #root = "Z:\\iSproggler"
-root = "C:\\Projects\\iSproggler\\src - iSproggler1.1.2"
+root = "C:\\Projects\\iSproggler\\src - iSproggler1.1.3"
 
 # The following extensions are required
 
@@ -134,15 +134,10 @@ setup(
 
     zipfile = None,             
     windows = [{"script": os.path.join(root,"main.py"),
-
                 "dest_base" : "iSproggler",
-
                 "icon_resources": [(1, ".\\icon.ico")],
-
                 "version": main._version_,
-
                 "copyright": "David Nicolson",
-
                 }]
 )
 
