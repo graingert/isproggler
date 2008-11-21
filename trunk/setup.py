@@ -5,7 +5,7 @@
 
 # Change this to the root location
 #root = "Z:\\iSproggler"
-root = "C:\\Projects\\iSproggler\\src"
+root = "C:\\Projects\\iSproggler\\src - iSproggler1.1.2"
 
 # The following extensions are required
 

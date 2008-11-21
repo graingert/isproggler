@@ -101,7 +101,7 @@ class iPod:
                 library[song]['Play Date UTC']
 
                 try:
-                    if times.isotounix(library[song]['Play Date UTC']) > (self.templastsong['time'] + (self.templastsong['duration'] + 10)):
+                    if times.isotounix(library[song]['Play Date UTC']) > times.isotounix(self.templastsong['time'],(self.templastsong['duration']+10)):
                         librarysong = library[song]
                         tempsong = {}
                         try:
@@ -424,7 +424,7 @@ class iPod:
                 #song['time'] = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(int(time.mktime(time.strptime(str(song['time']),"%Y-%m-%d %H:%M:%S")) - recduration)))
                 song['time'] = times.isotoiso(song['time'],-recduration)
                 log.debug("iPod shuffle: \"%s\" [%s] %s UTC" % (song['name'],song['duration'],song['time']))
-                if song['time'] < self.templastsong['time']:
+                if times.isotounix(song['time']) < times.isotounix(self.templastsong['time']):
                     log.warning("\"%s\" by %s has a calculated play date before last date in iTunes, not queueing" % (song['name'],song['artist']))
                     continue
                 newsongs.append(song)
@@ -478,12 +478,10 @@ class iPod:
             self.lastitunesname = self.templastsong['name']
             self.firstipod = ipodsongs[0]['time']
             self.firstipodname = ipodsongs[0]['name']
-            print ipodsongs[0]
-            print '%s - %s' % (times.isotounix(self.firstipod), self.lastitunes)
-            self.playinggap = times.isotounix(self.firstipod) - self.lastitunes
+            self.playinggap = times.isotounix(self.firstipod) - times.isotounix(self.lastitunes)
             log.verb("Last iTunes play: %s UTC \"%s\"" % (self.lastitunes, self.lastitunesname))
             log.verb("Last iTunes play duration: %s " % (self.templastsong['duration']))
-            log.verb("Playing gap: %s" % (times.isotounix(self.firstipod) - (self.lastitunes + self.templastsong['duration'])))
+            log.verb("Playing gap: %s" % (times.isotounix(self.firstipod) - (times.isotounix(self.lastitunes) + self.templastsong['duration'])))
             log.verb("First iPod play: %s UTC \"%s\"" % (self.firstipod, self.firstipodname))
             try:
                 ipodsongs = self.checkmultiple(ipodsongs,multiplexml)
