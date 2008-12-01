@@ -43,8 +43,8 @@ class iPod:
 
     def _gettracks(self,xmlfile):
         if not os.path.exists(xmlfile):
-        	log.warning("XML library file does not exist")
-        	return None
+          log.warning("XML library file does not exist")
+          return None
         try:
             xml = codecs.open(xmlfile,"rb","utf-8","replace").read()
         except (IOError, EOFError, UnicodeDecodeError), err:
@@ -199,7 +199,7 @@ class iPod:
         
         songsxml = self._gettracks(xmlfile)
         if songsxml is None:
-        	return None
+          return None
         library = self._songlist(songsxml)
         del songsxml
 

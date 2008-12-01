@@ -747,9 +747,9 @@ class TaskBarApp(wxFrame):
     def OnUpdateiPhoneAuto(self, event):
         log.verb("OnUpdateiPhoneAuto")
         if main.prefs['ipodmultiple']:
-        	main.prefs['ipodmultiple'] = False
-        	f._pickle("iSproggler Prefs.pkl",main.prefs)
-        	log.verb("Multiple plays disabled as it is not compatible with iPhone and iPod touch");
+          main.prefs['ipodmultiple'] = False
+          f._pickle("iSproggler Prefs.pkl",main.prefs)
+          log.verb("Multiple plays disabled as it is not compatible with iPhone and iPod touch");
         s.checkipodsongs()
         
     def OnUpdateiPod(self, event):

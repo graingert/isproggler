@@ -75,11 +75,11 @@ class Log:
             print "Unable to open to log: [%s: %s]" % (sys.exc_info()[0],err)
             return
         try:
-			try:
-				logfile.write("%s [%s] %s\r\n" % (currenttime, verbosity, message))
-				print "%s [%s] %s" % (currenttime, verbosity, message.encode("utf-8"))
-			except Exception, err:
-				print "Unable to write \"%s\" to log: [%s: %s]" % (message.encode("utf-8"),sys.exc_info()[0],err)
+      try:
+        logfile.write("%s [%s] %s\r\n" % (currenttime, verbosity, message))
+        print "%s [%s] %s" % (currenttime, verbosity, message.encode("utf-8"))
+      except Exception, err:
+        print "Unable to write \"%s\" to log: [%s: %s]" % (message.encode("utf-8"),sys.exc_info()[0],err)
         except UnicodeDecodeError, err:
             logfile.write("%s [%s] [UnicodeDecodeError] %s\r\n" % (currenttime, verbosity, repr(message)))
         self.slastmessage = self.lastmessage

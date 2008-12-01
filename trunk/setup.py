@@ -4,8 +4,7 @@
 # The only required part of this script is the setup tuple
 
 # Change this to the root location
-#root = "Z:\\iSproggler"
-root = "C:\\Projects\\iSproggler\\src - iSproggler1.1.3"
+root = "C:\\Projects\\iSproggler\\isproggler\\trunk"
 
 # The following extensions are required
 
@@ -31,7 +30,6 @@ print "Root: ",root
 print "\nPackaging iSproggler version %s\n" % main._version_
 
 sys.argv.append("py2exe")
-
 
 os.mkdir(os.path.join(root,"build"))
 
@@ -121,7 +119,6 @@ print "Creating images..."
 #prepareshell()
 print
 
-
 setup(
     options = {"py2exe": {"typelibs":
                           [('{9E93C96F-CF0D-43F6-8BA8-B807A3370712}', 0, 1, 11)],
@@ -137,7 +134,7 @@ setup(
                 "dest_base" : "iSproggler",
                 "icon_resources": [(1, ".\\icon.ico")],
                 "version": main._version_,
-                "copyright": "David Nicolson",
+                "copyright": "",
                 }]
 )
 
@@ -149,7 +146,3 @@ if deployment:
     upx()
 #print "Creating ZIP archive..."
 #zipapp()
-
-#if raw_input("Upload to server? [y/n]\n").tolower() == "y":
-#   ftpupload()
-    
