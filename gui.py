@@ -19,8 +19,8 @@ from webbrowser import open_new
 from urllib import quote
 from urllib2 import urlopen
 from socket import setdefaulttimeout
-import md5
 import time
+import hashlib
 from win32gui import MessageBox
 import win32process, win32api, win32con
 #from win32com.shell import shell, shellcon
@@ -828,7 +828,7 @@ class TaskBarApp(wxFrame):
                     newprefs['passlength'] = len(password)
                     if type(password) == type(u""):
                         password = password.encode("utf-8")
-                    newprefs['password'] = md5.md5(password).hexdigest()
+                    newprefs['password'] = hashlib.md5(password).hexdigest()
                 if prefsdlg.ipodsupport.GetValue():
                     newprefs['ipodsupport'] = prefsdlg.ipodsupport.GetValue()
                     newprefs['ipodmultiple'] = prefsdlg.ipodmultiple.GetValue()
