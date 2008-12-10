@@ -9,7 +9,7 @@ wxDefaultSize, wxGROW, wxALL, wxBOTH, wxID_OK, wxID_CANCEL, wxOPEN, \
 wxFRAME_NO_TASKBAR, wxBITMAP_TYPE_PNG, wxBITMAP_TYPE_ICO, wxDLG_PNT, \
 wxHORIZONTAL, wxVERTICAL, wxALIGN_CENTER, wxALIGN_RIGHT, wxTE_PASSWORD, \
 wxTE_READONLY, wxDLG_SZE, EVT_TIMER, EVT_MENU, EVT_CHECKBOX, EVT_BUTTON, \
-EVT_TASKBAR_RIGHT_UP, EVT_TASKBAR_LEFT_DCLICK, EVT_LEFT_DOWN, true, false
+EVT_TASKBAR_RIGHT_UP, EVT_TASKBAR_LEFT_DCLICK, EVT_LEFT_DOWN
 from wx import Point, Colour
 from wx.lib.hyperlink import HyperLinkCtrl
 from sys import exit, argv
@@ -232,21 +232,21 @@ class PrefsDialog(wxDialog):
         #self.ipodmultiple.Disable()
         if main.prefs['ipodsupport']:
             self.xmlfile = main.prefs['xmlfile']
-            self.ipodsupport.SetValue(true)
+            self.ipodsupport.SetValue(True)
         else:
             self.ipodmanual.Disable()
             self.ipodmultiple.Disable()
             #self.ipodmanual.Disable()
 
         if main.prefs['ipodmultiple']:
-            self.ipodmultiple.SetValue(true)
+            self.ipodmultiple.SetValue(True)
         if main.prefs['ipodmanual']:
-            self.ipodmanual.SetValue(true)
+            self.ipodmanual.SetValue(True)
         
         if self.LoginRun():
-            self.loginrun.SetValue(true)
+            self.loginrun.SetValue(True)
         else:
-            self.loginrun.SetValue(false)
+            self.loginrun.SetValue(False)
 
         okbutton.SetDefault()
 
@@ -311,8 +311,8 @@ class PrefsDialog(wxDialog):
             #self.xmlfile.Enable()
             #self.xmlbutton.Enable()
         else:
-            #self.ipodmultiple.SetValue(false)
-            #self.ipodmanual.SetValue(false)
+            #self.ipodmultiple.SetValue(False)
+            #self.ipodmanual.SetValue(False)
             self.ipodmultiple.Disable()
             self.ipodmanual.Disable()
 
@@ -326,24 +326,24 @@ class PrefsDialog(wxDialog):
             self.ipodmultiple.Enable()
             self.ipodmanual.Enable()
         else:
-            self.ipodsupport.SetValue(false)
+            self.ipodsupport.SetValue(False)
             #for some reason Disable() doesn't work here
             self.ipodmultiple.Disable()
-            #self.ipodmultiple.SetValue(false)
+            #self.ipodmultiple.SetValue(False)
             self.ipodmanual.Disable()
-            #self.ipodmanual.SetValue(false)
+            #self.ipodmanual.SetValue(False)
 
         xmldlg.Destroy()
     
     def iPodMultiple(self, event):
         if self.ipodmultiple.GetValue():
             if self.ipodmanual.GetValue():
-                self.ipodmanual.SetValue(false)
+                self.ipodmanual.SetValue(False)
 
     def iPodManual(self, event):
         if self.ipodmanual.GetValue():
             if self.ipodmultiple.GetValue():
-                self.ipodmultiple.SetValue(false)
+                self.ipodmultiple.SetValue(False)
 
     def LoginRun(self):
         try:
@@ -606,7 +606,7 @@ class TaskBarApp(wxFrame):
  
         if wxPlatform != "__WXMSW__":
             wxFrame.__init__(self,NULL, -1, "iSproggler")
-            self.Show(true)
+            self.Show(True)
             menubar = wxMenuBar()
             menubar.Append(self.menu, "iSproggler")
             self.SetMenuBar(menubar)
@@ -621,13 +621,13 @@ class TaskBarApp(wxFrame):
         if main.prefs['ipodsupport']:
             if not main.ipodmounted:
                 try:
-                    self.menu.Enable(wxID_IPOD,false)
+                    self.menu.Enable(wxID_IPOD,False)
                     self.ipodmenuenabled = False
                 except:
                     log.warning("Exception raised when disabling the Update iPod menu")
         else:
             try:
-                self.menu.Enable(wxID_IPOD,false)
+                self.menu.Enable(wxID_IPOD,False)
                 log.verb("Disabling \"Update iPod\" menu item as iPod is support is not enabled")
                 self.ipodmenuenabled = False
             except:
@@ -636,12 +636,12 @@ class TaskBarApp(wxFrame):
         if s.pausesubmissions:
             self.menu.SetLabel(wxID_PAUSE, "Resume Submissions")
             self.SetBlueIcon("Submissions Paused")
-            self.menu.Enable(wxID_DISABLE,false)
+            self.menu.Enable(wxID_DISABLE,False)
             log.verb("Paused submission state restored")
         elif s.disablesubmissions:
             self.menu.SetLabel(wxID_DISABLE, "Enable Submissions")
             self.SetBlueIcon("Submissions Disabled")
-            self.menu.Enable(wxID_PAUSE,false)
+            self.menu.Enable(wxID_PAUSE,False)
             log.verb("Disabled submission state restored")
  
     def SetWindowSize(self):
@@ -682,14 +682,14 @@ class TaskBarApp(wxFrame):
         log.verb(message)
         self.menu.SetLabel(wxID_DISABLE, "Disable Submissions")
         self.SetRedIcon(self.SetIconQuote())
-        self.menu.Enable(wxID_PAUSE,true)
+        self.menu.Enable(wxID_PAUSE,True)
         s.submissionstate("disable",False)
 
     def _disable_submissions(self,message):
         log.verb(message)
         self.menu.SetLabel(wxID_DISABLE, "Enable Submissions")
         self.SetBlueIcon("Submissions Disabled")
-        self.menu.Enable(wxID_PAUSE,false)
+        self.menu.Enable(wxID_PAUSE,False)
         s.submissionstate("disable",True)
 
     def LastFMCheck(self):
@@ -756,7 +756,7 @@ class TaskBarApp(wxFrame):
         if s.ipodmanual():
             main.updateonunmount = False
             try:
-                self.menu.Enable(wxID_IPOD,false)
+                self.menu.Enable(wxID_IPOD,False)
                 log.verb("Disabling \"Update iPod\" menu item as iPod songs have been found")
                 self.ipodmenuenabled = False
             except:
@@ -775,14 +775,14 @@ class TaskBarApp(wxFrame):
             #print "Enable Submissions"
             self.menu.SetLabel(wxID_DISABLE, "Disable Submissions")
             self.SetRedIcon(self.SetIconQuote())
-            self.menu.Enable(wxID_PAUSE,true)
+            self.menu.Enable(wxID_PAUSE,True)
             s.submissionstate("disable",False)
             self.submissions_manually_disabled = False
         else:
             #print "Disable Submissions"
             self.menu.SetLabel(wxID_DISABLE, "Enable Submissions")
             self.SetBlueIcon("Submissions Disabled")
-            self.menu.Enable(wxID_PAUSE,false)
+            self.menu.Enable(wxID_PAUSE,False)
             s.submissionstate("disable",True)
             self.submissions_manually_disabled = True
 
@@ -791,13 +791,13 @@ class TaskBarApp(wxFrame):
             #print "Resume Submissions"
             self.menu.SetLabel(wxID_PAUSE, "Pause Submissions")
             self.SetRedIcon(self.SetIconQuote())
-            self.menu.Enable(wxID_DISABLE,true)
+            self.menu.Enable(wxID_DISABLE,True)
             s.submissionstate("pause",False)
         else:
             #print "Pause Submissions"
             self.menu.SetLabel(wxID_PAUSE, "Resume Submissions")
             self.SetBlueIcon("Submissions Paused")
-            self.menu.Enable(wxID_DISABLE,false)
+            self.menu.Enable(wxID_DISABLE,False)
             s.submissionstate("pause",True)
 
     def OnLastfmHomepage(self, event):
@@ -899,14 +899,14 @@ class TaskBarApp(wxFrame):
             main.ipodcheck()
             if main.ipodmounted and not self.ipodmenuenabled:
                 try:
-                    self.menu.Enable(wxID_IPOD,true)
+                    self.menu.Enable(wxID_IPOD,True)
                     log.verb("Enabling \"Update iPod\" menu item as an iPod volume has mounted")
                     self.ipodmenuenabled = True
                 except:
                     log.warning("Exception raised when enabling the Update iPod menu")
             if not main.ipodmounted and self.ipodmenuenabled:
                 try:
-                    self.menu.Enable(wxID_IPOD,false)
+                    self.menu.Enable(wxID_IPOD,False)
                     log.verb("Disabling \"Update iPod\" menu item as iPod volume has unmounted")
                     self.ipodmenuenabled = False
                 except:
@@ -1008,8 +1008,8 @@ class MyApp(wxApp):
     def OnInit(self):
         frame = TaskBarApp(None, -1, "iSproggler")
         frame.Center(wxBOTH)
-        frame.Show(false)
-        return true
+        frame.Show(False)
+        return True
 
 
 if __name__ == '__main__':
