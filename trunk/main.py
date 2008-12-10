@@ -47,7 +47,7 @@ import codecs
 import urllib
 import urllib2
 import re
-import md5
+import hashlib
 import math
 import cPickle
 import commands
@@ -320,11 +320,6 @@ class Scrobbler:
             opener = urllib2.build_opener(proxy_handler, urllib2.HTTPHandler)
         urllib2.install_opener(opener)
 
-    def _getMD5(self, data):
-        m = md5.new()
-        m.update(data)
-        return m.hexdigest()
-
     def handshake(self):
         """Initialises connection with the server."""
         self.lastshakeattempt = int(time.time())
@@ -344,7 +339,7 @@ class Scrobbler:
               "c":"isp",
               "v":_version_,
               "t": timestamp,
-              "a": self._getMD5(main.prefs['password'] + timestamp),
+              "a": hashlib.md5(main.prefs['password'] + timestamp).hexdigest(),
               "u":username
             })
 
