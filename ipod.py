@@ -57,7 +57,7 @@ class iPod:
         #playlists = matches[0][1]
         del matches
         return songsxml
-    
+
     def _songlist(self,songsxml):
         library = {}
         allsongs = re.findall("(?xms)<dict>(.*?)</dict>", songsxml)
@@ -196,21 +196,21 @@ class iPod:
         log.verb("Looking for songs in Library played after \"%s\" at %s UTC" % (self.templastsong['name'],self.templastsong['time']))
 
         starttime = time.time()
-        
+
         songsxml = self._gettracks(xmlfile)
         if songsxml is None:
           return None
         library = self._songlist(songsxml)
         del songsxml
 
-        totaltime = time.time() - starttime     
+        totaltime = time.time() - starttime
         log.debug("XML file parsed in %f seconds" % totaltime)
         starttime = time.time()
-        
+
         ipodsongs = self._parsesongs(library)
         del library
-        
-        totaltime = time.time() - starttime     
+
+        totaltime = time.time() - starttime
         log.debug("Library checked in %f seconds" % totaltime)
 
         if gc.isenabled():
@@ -218,7 +218,7 @@ class iPod:
         gc.collect()
 
         return ipodsongs
-    
+
     def _adjusttimes(self,songs):
         """Adjusts timestamps to make room for multiple iPod plays."""
         log.verb("iPod songs before time adjustment:")
@@ -240,7 +240,7 @@ class iPod:
                 song['time'] = timestamp
                 first = False
             else:
-                #now start adding the duration of the previous song 
+                #now start adding the duration of the previous song
                 timestamp = times.isotoiso(timestamp,lastsong['duration'])
                 song['time'] = timestamp
             lastsong = song
@@ -251,16 +251,16 @@ class iPod:
                 log.warning("\"%s\" by %s has a calculated play date in the future, not queueing [current time: %s UTC, time: %s UTC]" % (song['name'],song['artist'],time.strftime("%Y-%m-%d %H:%M:%S",time.gmtime()),song['time']))
                 continue
             newsongs.append(song)
-        
+
         log.verb("Original last played epoch: %s Adjusted last played epoch: %s" % (last_ipod,newsongs[-1]['time']))
         #newsongs[-1]['time'] = songs[-1]['time']
         newsongs[-1]['time'] = last_ipod
-                
+
         log.verb("iPod songs after time adjustment:")
         for song in newsongs:
             log.verb("%s UTC (%s)\t%s\t%s" % (song['time'],song['duration'],song['playcount'],song['name']))
         return newsongs
-    
+
     def checkmultiple(self,ipodsongs,multiplexml=None):
         log.verb("Checking for multiple iPod plays for %d song%s" % (len(ipodsongs),self._pluralise(len(ipodsongs))))
         if multiplexml is None:
@@ -294,13 +294,13 @@ class iPod:
                 #songs.append(ipodsong)
                 #continue
                 preupdateplay = 0
-            
+
             postupdateplay = int(ipodsong['playcount'])
-            
+
             log.verb("Pre: %s Post: %s Name: \"%s\" [%s]" % (preupdateplay,postupdateplay,ipodsong['name'],ipodsong['id']))
             log.debug("Pre song: %s" % repr(preupdatesong))
             log.debug("Post song: %s" % repr(ipodsong))
-            
+
             if preupdateplay > postupdateplay:
                 log.warning("Play count is lower after iPod update for \"%s\" [before: %d, after: %d]" % (ipodsong['name'],preupdateplay,postupdateplay))
                 songs.append(ipodsong)
@@ -329,7 +329,7 @@ class iPod:
             os.remove(os.path.join(self.mypath,"iTunes Music Library.xml"))
         except:
             pass
- 
+
         if multiple:
             log.verb("%d extra play%s added to submission queue" % (multiplecount,self._pluralise(multiplecount)))
             return self._adjusttimes(songs)
@@ -339,7 +339,7 @@ class iPod:
 
     def processipodsongs(self, rawsongs):
         ipodsongs = []
-        
+
         for rawsong in rawsongs:
             if rawsong['artist'] == "":
                 log.verb("\"%s\" by %s disqualified because no artist is available" % (rawsong['name'],rawsong['artist']))
@@ -355,7 +355,7 @@ class iPod:
             #    continue
             #if rawsong['id'] == self.tempplayingsong['id']:
             #    log.verb("\"%s\" by %s disqualified because of overflow in the playing song" % (rawsong['name'],rawsong['artist']))
-            #    continue                
+            #    continue
             else:
                 ipodsongs.append(rawsong.copy())
 
@@ -371,7 +371,7 @@ class iPod:
         lasttime = None
         index = 0
         first = True
-        
+
         if songs[::-1][0]['time'] != songs[::-1][1]['time']:
             log.debug("No two play dates the same -- no iPod shuffle songs")
             return None
@@ -398,7 +398,7 @@ class iPod:
             #lasttime = song['time']
             #index += 1
         return len(songs)
-    
+
     def _addduration(self,songs):
         """Adds duration to make duplicate original iTunes timestamps."""
         newsongs = []
@@ -407,7 +407,7 @@ class iPod:
             song['time'] = times.isotoiso(song['time'],song['duration'])
             newsongs.append(song)
         return newsongs
-    
+
     def shufflecheck(self,songs):
         """Subtracts recursively the duration of the shuffle songs."""
         if len(songs) == 1:
@@ -418,7 +418,7 @@ class iPod:
             log.verb("Found %d iPod shuffle played songs" % index)
             newsongs = []
             recduration = 0
-            
+
             for song in songs[::-1][0:index]:
                 recduration += song['duration']
                 #song['time'] = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(int(time.mktime(time.strptime(str(song['time']),"%Y-%m-%d %H:%M:%S")) - recduration)))
@@ -435,7 +435,7 @@ class iPod:
                 newsongs.append(song)
             return newsongs
         return songs
-        
+
     def _pluralise(self,integer):
         if integer == 1:
             return ""
@@ -446,7 +446,7 @@ class iPod:
         """Checks the Library for songs played after the last played iSproggler song."""
         self.local = local
         self.templastsong = lastsong.copy()
-        
+
         try:
             rawsongs = self.retrievesongs(prefs['xmlfile'])
         except Exception, err:
@@ -511,24 +511,24 @@ class iPod:
             except AttributeError:
                 log.warning("Required attributes: Duration, PlayedDate not available -- discarding track [%s]" % repr(dir(track)))
                 continue
-                
+
             if times.isotounix(song['time']) > times.isotounix(self.lastsong['time'],+10):
                 #required fields
                 song['name'] = track.Name
                 song['playcount'] = int(track.PlayedCount)
                 song['id'] = int(track.TrackDatabaseID)
-                
+
                 #optional fields
                 try:
                     song['artist'] = track.Artist
                 except AttributeError:
                     song['artist'] = ""
-                
+
                 #disqualify any song played more than four weeks ago
                 if times.isotounix(song['time']) < time.mktime(time.gmtime()) - (28 * 24 * 60 * 60):
                     log.warning("\"%s\" by %s disqualified as it is played more than four weeks ago [%s UTC]" % (song['name'],song['artist'],song['time']))
                     continue
-                
+
                 if song['artist'] == "":
                     log.verb("\"%s\" disqualified because no artist is available" % song['name'])
                     continue
@@ -541,7 +541,7 @@ class iPod:
                     song['genre'] = track.Genre
                 except AttributeError:
                     song['genre'] = ""
-                
+
                 #try:
                 #    song['location'] = CastTo(track,"IITFileOrCDTrack").Location
                 #except:
@@ -552,7 +552,7 @@ class iPod:
                 if song['duration'] < 30:
                     log.verb("\"%s\" by %s disqualified because the duration is less than 30 seconds" % (song['name'],song['artist']))
                     continue
-                    
+
                 #exclude rules
                 if len(self.local['exclude_artist']) > 0:
                     for artist in self.local['exclude_artist']:
@@ -564,7 +564,7 @@ class iPod:
                         if song['genre'] == genre:
                             log.verb("\"%s\" by %s will not be submitted as it an excluded genre [%s]" % (song['name'], song['artist'],genre))
                             continue
-                    
+
                 try:
                     if song['genre'] == "Podcast" or win32com.client.CastTo(track,"IITFileOrCDTrack").Podcast:
                         if self.ignorepodcasts:
@@ -579,12 +579,12 @@ class iPod:
                 ipodsongs.append(song.copy())
 
         self.playlisttracks = ipodsongs
-        
+
         if len(ipodsongs) > 0:
             return True
         else:
             return None
-        
+
     def manual(self,lastsong,iTunes,local):
         self.local = local
         ipodplaylist = local['playlistname']
@@ -603,7 +603,7 @@ class iPod:
                 except AttributeError:
                     MessageBox(0,"The Smart Playlist \"%s\" was not found on any iPod sources" % (ipodplaylist),"iSproggler",1)
                     log.warning("Playlist object \"%s\" not found on %s" % (ipodplaylist,source.Name))
-                    continue                
+                    continue
                 log.verb("iPod playlist found: %s" % ipodplaylist)
                 log.verb("Looking for songs in playlist played after \"%s\" at %s UTC" % (self.lastsong['name'],self.lastsong['time']))
                 if self._enumplaylist(tracks) is not None:
@@ -615,7 +615,7 @@ class iPod:
 
 if __name__ == "__main__":
     ipod = iPod()
-    
+
     if len(sys.argv) > 1:
         if sys.argv[1] == "manual":
             import itunes
@@ -626,14 +626,14 @@ if __name__ == "__main__":
             lastsong = {'album': u"Chunga's Revenge", 'name': u'Sharleena', 'artist': u'Frank Zappa', 'mbid': None, 'location': u"/Volumes/Fire/Music/iTunes/iTunes Music/Frank Zappa/Chunga's Revenge/10 Sharleena.mp3", 'duration': 244, 'position': 37, 'playcount': 1, 'id': 14652}
             #lastsong['time'] = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.mktime(time.gmtime()) - 25 * 60 * 60))
             lastsong['time'] = '2007-03-29 06:32:45'
-            
+
             ipod.checkipod(lastsong,{'xmlfile': "/Users/dave/Desktop/iTunes Music Library2.xml", 'ipodmultiple': True},main.local,"/Users/dave/Desktop/iTunes Music Library1.xml")
     else:
         lastsong = {'album': u"Chunga's Revenge", 'name': u'Sharleena', 'artist': u'Frank Zappa', 'mbid': None, 'location': u"/Volumes/Fire/Music/iTunes/iTunes Music/Frank Zappa/Chunga's Revenge/10 Sharleena.mp3", 'duration': 244, 'position': 37, 'playcount': 1, 'id': 14652, 'time': "2006-02-10 01:54:37"}#2005-12-03 07:54:37 UTC     --- 2005-12-04T02:01:30Z
         #playingsong = {'album': u'Second Life Syndrome', 'name': u'Volte-Face', 'artist': u'Riverside', 'mbid': None, 'location': u'/Volumes/Fire/Music/iTunes/iTunes Music/Riverside/Second Life Syndrome/02 Volte-Face.mp3', 'duration': 520, 'position': 419, 'playcount': 14, 'id': 14955, 'time': "2005-12-04 02:39:28"}#2005-12-04T02:48:08Z
         #xmlfile = "/Users/dave/Music/iTunes/iTunes Music Library.xml"
         xmlfile = "C:\\Documents and Settings\\Dave\\My Documents\\My Music\\iTunes\\iTunes Music Library.xml"
-    
+
         import shutil
         #shutil.copyfile(xmlfile,"/Users/dave/.isproggler/iTunes Music Library.xml")
         shutil.copyfile(xmlfile,"C:\\Documents and Settings\\Dave\\Application Data\\iSproggler\\iTunes Music Library.xml")

@@ -353,7 +353,7 @@ class Scrobbler:
         try:
             if not main.local['socket']:
                 host = url[:31]
-                request = url[32:]              
+                request = url[32:]
                 req = urllib2.Request(url=host, data=request)
                 opener = urllib2.build_opener()
                 res = opener.open(req)

@@ -35,9 +35,9 @@ class iTunesConnection:
         self.major = major
         self.minor = minor
         self.connectfailed = False
-        
+
         self.xml_file = None
-    
+
     def pumpevents(self):
         if self.eventhandler:
             pythoncom.PumpWaitingMessages()
@@ -109,7 +109,7 @@ class iTunesConnection:
 
     def createobject(self):
         win32com.client.gencache.is_readonly = False
-        
+
         #for user defined dispatch
         if self.dispatchmode != "":
             log.verb("Trying _dispatch with mode '%s'" % self.dispatchmode)
@@ -133,7 +133,7 @@ class iTunesConnection:
                  "EnsureModule/Dispatch",
                  "EnsureDispatch",
                  "EnsureModule/EnsureDispatch"]
-    
+
         for mode in modes:
             try:
                 log.debug("Trying _dispatch with mode '%s'" % mode)
@@ -218,7 +218,7 @@ class iTunesConnection:
         #    log.error("Failed to initialise iTunes communication: [%s: %s]" % (sys.exc_info()[0],err))
         #    self.connected = False
         #    pass
-            
+
     def reinitialise(self):
         self.connected = False
         self.eventhandler = False
@@ -328,7 +328,7 @@ class iTunesConnection:
                 return None
 
             return self.song
-            
+
         elif sys.platform == "darwin":
             applescript = """tell application "iTunes"
                                 set this_name to the name of current track
@@ -343,7 +343,7 @@ class iTunesConnection:
                                 set this_genre to genre of current track
                             end tell
                             return this_name & tab & this_artist & tab & this_album & tab & this_duration & tab & this_position & tab & this_playcount & tab & this_id & tab & this_location & tab & this_genre"""
-    
+
             osa_output = unicode(commands.getoutput("osascript -e '%s'" % applescript),"utf-8")
             try:
                 self.song['name'], self.song['artist'], self.song['album'], \
@@ -408,7 +408,7 @@ class iTunesEvents:
             log.verb("iTunes Event: \"%s\" playing" % track.Name)
         except Exception, err:
             pass
-            #log.warning("Failed to cast to IITTrack for OnPlayerPlayEvent: %s" % err) 
+            #log.warning("Failed to cast to IITTrack for OnPlayerPlayEvent: %s" % err)
         self.playing = True
         self.stopped = False
 
@@ -421,7 +421,7 @@ class iTunesEvents:
             #log.warning("Failed to cast to IITTrack for OnPlayerStopEvent: %s" % err)
         self.stopped = True
         self.playing = False
-    
+
     def OnPlayerPlayingTrackChangedEvent(self,track):
         try:
             track = win32com.client.CastTo(track, "IITTrack")

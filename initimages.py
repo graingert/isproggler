@@ -39,7 +39,7 @@ import cStringIO"""
                 hexbyte = hexbyte[0]+hexbyte[1]+"0"+hexbyte[2]
             filehex.append(hexbyte.replace("0x","\\x"))
         filehex.append('"')
-    
+
         imgfile.write("'"+data+"':\n")
 
         buffer = ""

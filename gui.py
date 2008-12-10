@@ -101,11 +101,11 @@ class DummyClass:
         self.successfullsubmissions = 4
         self.pausesubmissions = False
         self.disablesubmissions = False
-        
+
         #main
         self.updateonunmount = False
         self.ipodmounted = False
-        
+
         #main
         self.prefs = {'username': "dave",
                       'password': "",
@@ -114,10 +114,10 @@ class DummyClass:
                       'ipodmultiple': False,
                       'xmlfile': "",
                       'ipodmanual': False}
-                      
+
         #itunes
         self.connected = True
-    
+
     #s
     def submissionstate(self,mode,bool):
         if mode == "disable":
@@ -130,7 +130,7 @@ class DummyClass:
                 self.pausesubmissions = False
             elif bool:
                 self.pausesubmissions = True
-    
+
     #main
     def ready(self):
         return True
@@ -140,13 +140,13 @@ class DummyClass:
         pass
     def ipodcheck(self):
         pass
-    
+
     #itunes
     def pumpevents(self):
         pass
     def cleanup(self):
         pass
-    
+
     #f
     def _pickle(self,name,data):
         print "Saving new prefs: "+repr(main.prefs)
@@ -168,7 +168,7 @@ class PrefsDialog(wxDialog):
             lastfm_bitmap = wxBitmapFromImage(lastfm_image)
             donate_image = wxImage(path.join(path.abspath(path.dirname(argv[0])),"data\\donate.gif"), wxBITMAP_TYPE_GIF)
             donate_bitmap = wxBitmapFromImage(donate_image)
-            
+
         #wxStaticBitmap(self, -1, bitmap, wxDLG_PNT(self,70,30))
         #wxStaticText(self, -1, "iSproggler Version %s" % _version_, wxDLG_PNT(self,80,80))
         self.box = wxBoxSizer(wxVERTICAL)
@@ -198,7 +198,7 @@ class PrefsDialog(wxDialog):
         self.ipodsupport = wxCheckBox(self, wxID_IPODSUPPORT, "Enable iPod Support", wxDLG_PNT(self,7,151))
         self.ipodmultiple = wxCheckBox(self, wxID_IPODMULTIPLE, "Enable Multiple iPod Plays", wxDLG_PNT(self,100,151))
         self.ipodmanual = wxCheckBox(self, wxID_IPODMANUAL, "Only Check Manually Updated iPods", wxDLG_PNT(self,100,166))
-        
+
         #wxStaticText(self, -1, "iTunes Library XML File:", wxDLG_PNT(self,7,167))
         #self.xmlfile = wxTextCtrl(self, wxID_XMLFILE, "", wxDLG_PNT(self,7,180),wxDLG_SZE(self,174,-1),wxTE_READONLY)
         self.xmlfile = ""
@@ -242,7 +242,7 @@ class PrefsDialog(wxDialog):
             self.ipodmultiple.SetValue(True)
         if main.prefs['ipodmanual']:
             self.ipodmanual.SetValue(True)
-        
+
         if self.LoginRun():
             self.loginrun.SetValue(True)
         else:
@@ -253,7 +253,7 @@ class PrefsDialog(wxDialog):
         EVT_CHECKBOX(self, wxID_IPODSUPPORT, self.iPodSupport)
         EVT_CHECKBOX(self, wxID_IPODMULTIPLE, self.iPodMultiple)
         EVT_CHECKBOX(self, wxID_IPODMANUAL, self.iPodManual)
-        
+
         #EVT_LEFT_DOWN(self, wxID_DONATE, self.Donate)
         #self.Bind(EVT_LEFT_DOWN, wxID_DONATE, self.Donate)
 
@@ -295,7 +295,7 @@ class PrefsDialog(wxDialog):
                 MessageBox(0,"iPod support is now enabled.\n\nSongs played after %s UTC on an iPod will now be submitted when the iPod is synced.\n\nIf the iPod is automatically updated, the process automatic. If disk use is enabled, eject the iPod after it has synced.\n\nIf \"Manually manage music [and videos]\" is checked in the iPod settings, select the \"Update iPod\" iSproggler menu item when the iPod is plugged in. If there is not a Smart Playlist on the iPod, create a one titled \"Recently Played\" with the condition: Last Played in the last 2 weeks." % s.lastsong['time'],"iSproggler",1)
                 log.verb("iPod support enabled")
                 log.verb("iPod-played songs played after %s UTC will be submitted" % s.lastsong['time'])
-                    
+
                 if path.exists(xmlfile):
                     log.verb("Found XML file: %s" % xmlfile)
                     self.xmlfile = xmlfile
@@ -334,7 +334,7 @@ class PrefsDialog(wxDialog):
             #self.ipodmanual.SetValue(False)
 
         xmldlg.Destroy()
-    
+
     def iPodMultiple(self, event):
         if self.ipodmultiple.GetValue():
             if self.ipodmanual.GetValue():
@@ -360,7 +360,7 @@ class PrefsDialog(wxDialog):
 class StatsDialog(wxDialog):
     def __init__(self, parent):
         wxDialog.__init__(self, parent, -1, "iSproggler Statistics", (-1,-1), wxSize(STATS_WIDTH,STATS_HEIGHT))
-       
+
         wxStaticText(self, -1, "Songs Submitted:", wxDLG_PNT(self,7,5))
         self.songssubmitted = wxStaticText(self, wxID_SONGSSUB, "0", wxDLG_PNT(self,175,5))
         wxStaticText(self, -1, "Songs Queued for Submission:", wxDLG_PNT(self,7,15))
@@ -373,7 +373,7 @@ class StatsDialog(wxDialog):
         wxStaticText(self, -1, "Last Submitted Song:", wxDLG_PNT(self,7,55))
         wxStaticText(self, -1, "Playing Song:", wxDLG_PNT(self,7,90))
         wxStaticText(self, -1, "iTunes Status:", wxDLG_PNT(self,7,127))
-        self.itunesstatus = wxStaticText(self, wxID_ITUNES, "", wxDLG_PNT(self,95,127))       
+        self.itunesstatus = wxStaticText(self, wxID_ITUNES, "", wxDLG_PNT(self,95,127))
         wxStaticText(self, -1, "Last Server Response:", wxDLG_PNT(self,7,137))
         self.lastresponse = wxStaticText(self, wxID_ITUNES, "", wxDLG_PNT(self,95,137))
 
@@ -413,11 +413,11 @@ class StatsDialog(wxDialog):
         self.SetValues()
 
         EVT_BUTTON(self, wxID_OPENLOG, self.OpenLog)
-        
+
         self.timer = wxTimer(self, wxID_STATSTIMER)
         EVT_TIMER(self, wxID_STATSTIMER, self.OnTimer)
         self.timer.Start(1000)
-        
+
         self.first = True
 
 
@@ -455,7 +455,7 @@ class StatsDialog(wxDialog):
 
     def CheckVersion(self):
         self.first = False
-        
+
         #try:
             #setdefaulttimeout(12)
             #null, newversion, versiontext = urlopen("").readlines()
@@ -466,13 +466,13 @@ class StatsDialog(wxDialog):
             #log.debug(newversion+versiontext)
         #except Exception, err:
             #log.warning("Version checking error: [%s:%s]" % (Exception,err))
-    
+
     def SetValues(self):
         self.songssubmitted.SetLabel(str(s.songssubmitted))
         self.songsqueued.SetLabel(str(s.songsqueued))
         self.submissionattempts.SetLabel(str(s.submissionattempts))
         self.successfullsubmissions.SetLabel(str(s.successfullsubmissions))
-        
+
         if s.lastsubmitted != {}:
             self.lnkLastPlayedTrack.SetURL("http://last.fm/music/%s/_/%s" % (quote(s.lastsubmitted['artist'].encode('utf-8')),
                                                                              quote(s.lastsubmitted['name'].encode('utf-8'))))
@@ -507,7 +507,7 @@ class StatsDialog(wxDialog):
             self.lnkNowPlayingTrack.SetLabel('')
             self.lnkNowPlayingArtist.SetURL('')
             self.lnkNowPlayingArtist.SetLabel('')
-        
+
         try:
             if itunes.Events.suspended:
                 itunesstatus = "Busy"
@@ -521,7 +521,7 @@ class StatsDialog(wxDialog):
                 itunesstatus = ""
         except:
             itunesstatus = ""
-        
+
         self.itunesstatus.SetLabel(itunesstatus)
         self.lastresponse.SetLabel(s.lastrawserverresponse)
 
@@ -534,13 +534,13 @@ class TaskBarApp(wxFrame):
         #self.pathtoself = path.split(argv[0])[0]
         self.pathtoself = path.abspath(path.dirname(argv[0]))
         self.ipodmenuenabled = False
-        
+
         self.statsdlgshown = False
         self.prefsdlgshown = False
-        
+
         self.changesuccessicon = False
         self.lastsubtime = -1
-        
+
         self.submissions_manually_disabled = False
         self.quotes = True
 
@@ -576,7 +576,7 @@ class TaskBarApp(wxFrame):
         self.menu.Append(wxID_STATS, "Statistics"," Show Statistics")
         self.menu.Append(wxID_PREFS, "Preferences..."," Show Preferences...")
         self.menu.Append(wxID_EXIT, "Exit"," Quit iSproggler")
-       
+
         #EVT_MENU(self, wxID_DISABLE, self.OnDisableSubmissions)
         #EVT_MENU(self, wxID_PAUSE, self.OnPauseSubmissions)
         #EVT_MENU(self, wxID_LASTFMHOME, self.OnLastfmHomepage)
@@ -603,7 +603,7 @@ class TaskBarApp(wxFrame):
         if not main.ready():
             log.verb("Preferences need to be set")
             self.OnPreferences(-1)
- 
+
         if wxPlatform != "__WXMSW__":
             wxFrame.__init__(self,NULL, -1, "iSproggler")
             self.Show(True)
@@ -617,7 +617,7 @@ class TaskBarApp(wxFrame):
         self.timer.Start(1000)
         self.coretimer = 10
         self.SetWindowSize()
- 
+
         if main.prefs['ipodsupport']:
             if not main.ipodmounted:
                 try:
@@ -643,7 +643,7 @@ class TaskBarApp(wxFrame):
             self.SetBlueIcon("Submissions Disabled")
             self.menu.Enable(wxID_PAUSE,False)
             log.verb("Disabled submission state restored")
- 
+
     def SetWindowSize(self):
         try:
             reg = _winreg.ConnectRegistry(None, _winreg.HKEY_CURRENT_USER)
@@ -698,7 +698,7 @@ class TaskBarApp(wxFrame):
         if not self._lastfm_running():
             if s.disablesubmissions:
                 self._enable_submissions("Enabling submissions as the Last.fm software is not running")
-                
+
             return
         try:
             reg = _winreg.ConnectRegistry(None, _winreg.HKEY_CURRENT_USER)
@@ -706,7 +706,7 @@ class TaskBarApp(wxFrame):
             user = _winreg.QueryValueEx(key, "CurrentUser")[0]
             key = _winreg.OpenKey(reg, r"Software\Last.fm\Client\Users\%s" % user, _winreg.KEY_READ)
             enable = _winreg.QueryValueEx(key, "LogToProfile")[0]
-           
+
             if enable == 1:
                 if s.disablesubmissions:
                     return
@@ -723,7 +723,7 @@ class TaskBarApp(wxFrame):
 
     #def OnTaskBarLeftDouble(self, event):
     #    self.IconQuote()
-    
+
     def OnTaskBarLeftDouble(self, event):
         if self.quotes:
             self.quotes = False
@@ -743,7 +743,7 @@ class TaskBarApp(wxFrame):
             else:
                 log.warning(s.manualipoderror)
                 MessageBox(0,s.manualipoderror+".\n\nPlease try again.","iSproggler",1)
-        
+
     def OnUpdateiPhoneAuto(self, event):
         log.verb("OnUpdateiPhoneAuto")
         if main.prefs['ipodmultiple']:
@@ -751,7 +751,7 @@ class TaskBarApp(wxFrame):
           f._pickle("iSproggler Prefs.pkl",main.prefs)
           log.verb("Multiple plays disabled as it is not compatible with iPhone and iPod touch");
         s.checkipodsongs()
-        
+
     def OnUpdateiPod(self, event):
         if s.ipodmanual():
             main.updateonunmount = False
@@ -874,7 +874,7 @@ class TaskBarApp(wxFrame):
                         log.verb("Registry writing successful")
                     except:
                         pass
-            
+
             try:
                 self.prefsdlgshown = False
                 prefsdlg.Destroy()

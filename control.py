@@ -36,7 +36,7 @@ class Control:
             except OSError:
                 print "Unable to create the %s directory, check your permissions." % (self.path)
             return False
-    
+
     def writeprefs(self,prefs):
         try:
             try:
@@ -47,7 +47,7 @@ class Control:
                 print "Unable to write to prefs file in %s, check your permissions." % (self.path)
         except cPickle.UnpicklingError:
             print "Unable to write to prefs file, pickling error."
-    
+
     def readprefs(self):
         try:
             try:
@@ -69,7 +69,7 @@ class Control:
         except (IOError, EOFError):
             print "Error opening cache, it might not exist."
             return None
-            
+
     def writecache(self,filedata):
         try:
             picklefile = open(os.path.join(self.path,"iSproggler Cache.pkl"),"wb")
@@ -91,9 +91,9 @@ class Control:
     def firstrun(self):
         print "This appears to be the first time you've run iSproggler."
         print "Please enter the following information..."
-        
+
         self.setup()
-        
+
         if self.platform == "Windows":
             print "If you would like iSproggler to start at login (recommended), place a shortcut of iSproggler.exe in %s\n" % (os.getenv("USERPROFILE")+"\\Start Menu\\Programs\\Startup\\\n")
             print "You can now run iSproggler.exe, it's recommended to keep both iSproggler.exe and iSprogglerCP.exe in C:\\Program Files\\iSproggler\\\n"
@@ -109,7 +109,7 @@ class Control:
             loglevel = "VERB"
         ipodchoice = raw_input("\nEnable iPod submissions? [y/n]\n")
         ipodchoice = string.lower(ipodchoice)
-        if ipodchoice == "y":       
+        if ipodchoice == "y":
             pathchoice = None
             if self.platform == "Mac OS X":
                 defaultxmlpath = os.path.expanduser("~") + "/Music/iTunes/iTunes Music Library.xml"
@@ -168,7 +168,7 @@ class Control:
         print "6. View last log messages"
         print "7. Quit iSproggler"
         print "8. Return\n"
-        
+
         choice = raw_input()
         print ""
         if choice == "1":
@@ -298,7 +298,7 @@ class Control:
                 cPickle.dump([],historyfile)
                 historyfile.close()
                 print "iSproggler 0.1 song history file cleared"
-                
+
             cachefile = open(os.path.join(self.path,"iSproggler Cache.pkl"),"rb")
             cache = cPickle.load(cachefile)
             cachefile.close()
@@ -312,7 +312,7 @@ class Control:
                 print "iSproggler 0.1 cache file cleared"
         except:
             pass
-            
+
 if __name__ == "__main__":
 
     control = Control()
