@@ -15,7 +15,7 @@ class AudionConnection:
 
     def pumpevents(self):
         pass
-    
+
     def cleanup(self):
         pass
 
@@ -30,7 +30,7 @@ class AudionConnection:
                             set this_name to track title of control_window
                             set this_name to track title of control_window
                             set this_name to track title of control_window
-                            
+
                             set this_duration to 300 --fix
                             set this_position to elapsed seconds of control_window
                             set this_playcount to 0 --fix
@@ -61,7 +61,7 @@ class AudionConnection:
 class DummyClass:
     def __init__(self):
         pass
-        
+
     def checkipod(self,lastsong,prefs):
         return None
 

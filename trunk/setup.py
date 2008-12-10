@@ -50,7 +50,7 @@ def movefiles():
     except:
         pass
     if not os.path.exists(os.path.join(root,"build")):
-        os.makedirs(os.path.join(root,"build"))            
+        os.makedirs(os.path.join(root,"build"))
     #try:
     #    shutil.rmtree(os.path.join(root,"build\\data"))
     #except:
@@ -129,7 +129,7 @@ setup(
                           }},
 
 
-    zipfile = None,             
+    zipfile = None,
     windows = [{"script": os.path.join(root,"main.py"),
                 "dest_base" : "iSproggler",
                 "icon_resources": [(1, ".\\icon.ico")],
