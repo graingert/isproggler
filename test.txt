@@ -1,9 +1,0 @@
-$LastChangedDate: 2006-09-28 14:37:13 +0800 (Thu, 28 Sep 2006) $
-$Date: 2006-09-28 14:37:13 +0800 (Thu, 28 Sep 2006) $
-$LastChangedRevision: 12219 $
-$Revision: 12219 $
-$LastChangedBy: cauchy $
-$Author: cauchy $
-$URL: http://192.168.15.101/svn/nova/trunk/deploy/test.txt $
-$Id$
-$Id: $
