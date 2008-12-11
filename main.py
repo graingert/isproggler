@@ -72,8 +72,8 @@ import mbid
 
 
 
-_version_ = "1.1.3"
-_build_ = 20081120
+_version_ = "1.1.4"
+_build_ = 20081210
 _threaded_ = False #TODO
 
 local = {'debug': False,
@@ -1397,12 +1397,7 @@ class Main:
         try:
             s.playingsong = itunes.getsong().copy()
             try:
-                if s.playingsong['id'] != s.lastnowplayedid:
-                    s.nowplaying(s.playingsong.copy())
-            except:
-                pass # If this fails, it's not the end of the world, so move on.
-            try:
-                if s.playingsong['id'] != s.lastnowplayedid:
+                if s.handshaked and s.playingsong['id'] != s.lastnowplayedid:
                     s.nowplaying(s.playingsong.copy())
             except:
                 pass # If this fails, it's not the end of the world, so move on.
