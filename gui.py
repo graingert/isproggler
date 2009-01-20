@@ -461,13 +461,13 @@ class StatsDialog(wx.Dialog):
         self.successfullsubmissions.SetLabel(str(s.successfullsubmissions))
 
         if s.lastsubmitted != {}:
-            self.lnkLastPlayedTrack.SetURL("http://last.fm/music/%s/_/%s" % (quote(s.lastsubmitted['artist'].encode('utf-8')),
-                                                                             quote(s.lastsubmitted['name'].encode('utf-8'))))
+            self.lnkLastPlayedTrack.SetURL("http://last.fm/music/%s/_/%s" % (quote(s.lastsubmitted['artist'].encode('utf-8').replace('/','%2F')),
+                                                                             quote(s.lastsubmitted['name'].encode('utf-8').replace('/','%2F'))))
             try:
                 self.lnkLastPlayedTrack.SetLabel(s.lastsubmitted['name'])
             except:
                 self.lnkLastPlayedTrack.SetLabel('track contains non-displayable characters')
-            self.lnkLastPlayedArtist.SetURL("http://last.fm/music/%s" % (quote(s.lastsubmitted['artist'].encode('utf-8'))))
+            self.lnkLastPlayedArtist.SetURL("http://last.fm/music/%s" % (quote(s.lastsubmitted['artist'].encode('utf-8').replace('/','%2F'))))
             try:
                 self.lnkLastPlayedArtist.SetLabel(s.lastsubmitted['artist'])
             except:
@@ -476,9 +476,9 @@ class StatsDialog(wx.Dialog):
         playingsong = s.playingsong
 
         if playingsong != None:
-            self.lnkNowPlayingTrack.SetURL("http://last.fm/music/%s/_/%s" % (quote(playingsong['artist'].encode('utf-8')),
-                                                                             quote(playingsong['name'].encode('utf-8'))))
-            self.lnkNowPlayingArtist.SetURL("http://last.fm/music/%s" % (quote(playingsong['artist'].encode('utf-8'))))
+            self.lnkNowPlayingTrack.SetURL("http://last.fm/music/%s/_/%s" % (quote(playingsong['artist'].encode('utf-8').replace('/','%2F')),
+                                                                             quote(playingsong['name'].encode('utf-8').replace('/','%2F'))))
+            self.lnkNowPlayingArtist.SetURL("http://last.fm/music/%s" % (quote(playingsong['artist'].encode('utf-8').replace('/','%2F'))))
             try:
                 self.lnkNowPlayingTrack.SetLabel(playingsong['name'])
             except:
