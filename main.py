@@ -72,8 +72,8 @@ import mbid
 
 
 
-_version_ = "1.1.4"
-_build_ = 20081210
+_version_ = "1.2.0"
+_build_ = 20090318
 _threaded_ = False #TODO
 
 local = {'debug': False,
@@ -444,21 +444,25 @@ class Scrobbler:
         submission = "s="+self.md5hash
 
         for song in songs:
-            submission += "&"+"a["+str(n)+"]="+urllib.quote(song['artist'].encode("utf-8"))
-            submission += "&"+"t["+str(n)+"]="+urllib.quote(song['name'].encode("utf-8"))
+            _submission  = "&"+"a["+str(n)+"]="+urllib.quote(song['artist'].encode("utf-8"))
+            _submission += "&"+"t["+str(n)+"]="+urllib.quote(song['name'].encode("utf-8"))
             if song['album'] != "":
-                submission += "&"+"b["+str(n)+"]="+urllib.quote(song['album'].encode("utf-8"))
+                _submission += "&"+"b["+str(n)+"]="+urllib.quote(song['album'].encode("utf-8"))
             else:
-                submission += "&"+"b["+str(n)+"]="+""
+                _submission += "&"+"b["+str(n)+"]="+""
             if song['mbid'] is not None:
-                submission += "&"+"m["+str(n)+"]="+song['mbid']
+                _submission += "&"+"m["+str(n)+"]="+song['mbid']
             else:
-                submission += "&"+"m["+str(n)+"]="+""
-            submission += "&"+"l["+str(n)+"]="+str(song['duration'])
-            submission += "&"+"i["+str(n)+"]="+str(times.isotounix(str(song['time']), -time.timezone))
-            submission += "&"+"r["+str(n)+"]=" #Rating, skip this
-            submission += "&"+"n["+str(n)+"]=" #FIXME - This is the Track Number, need to get this in itunes.py
-            submission += "&"+"o["+str(n)+"]=P" #Source, hardcoded to "P - Chosen by the user"
+                _submission += "&"+"m["+str(n)+"]="+""
+            _submission += "&"+"l["+str(n)+"]="+str(song['duration'])
+            if time.localtime()[-1] and time.daylight:
+              _submission += "&"+"i["+str(n)+"]="+str(times.isotounix(str(song['time']), -time.altzone))
+            else:
+              _submission += "&"+"i["+str(n)+"]="+str(times.isotounix(str(song['time']), -time.timezone))
+            _submission += "&"+"r["+str(n)+"]=" #Rating, skip this
+            _submission += "&"+"n["+str(n)+"]=" #FIXME - This is the Track Number, need to get this in itunes.py
+            _submission += "&"+"o["+str(n)+"]=P" #Source, hardcoded to "P - Chosen by the user"
+            submission += _submission
             n += 1
 
         try:
