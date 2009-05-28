@@ -121,7 +121,7 @@ print
 
 setup(
     options = {"py2exe": {"typelibs":
-                          [('{9E93C96F-CF0D-43F6-8BA8-B807A3370712}', 0, 1, 11)],
+                          [('{9E93C96F-CF0D-43F6-8BA8-B807A3370712}', 0, 1, 12)],
                           "optimize": 2,
                           #"packages": ["encodings"],
                           "bundle_files": 1,
