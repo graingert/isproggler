@@ -34,8 +34,8 @@ import mbid
 
 
 
-_version_ = "1.2.0"
-_build_ = 20090318
+_version_ = "1.2.1"
+_build_ = 20090617
 _threaded_ = False #TODO
 
 local = {'debug': False,
@@ -138,7 +138,7 @@ class Scrobbler:
             state['disablesubmissions'] = b
             f._pickle("iSproggler Submission State.pkl",state)
 
-    def submittable(self):
+    def submittable(self, now_playing_check=False):
         """Determines if song is submittable."""
         if main.delayedipodcheck > 0:
             log.debug("Not adding iTunes song to queue yet to preserve iPod stamp")
@@ -217,16 +217,17 @@ class Scrobbler:
             return False
         self.lastpollpos = self.playingsong['position']
 
+        #no time checks for now playing.
+        if now_playing_check:
+          return True
         #main submission rules
-        if int(self.playingsong['position']) >= 240 or \
-        float(self.playingsong['position']) / float(self.playingsong['duration']) > .5:
+        elif int(self.playingsong['position']) >= 240 or float(self.playingsong['position']) / float(self.playingsong['duration']) > .5:
             #if seekprotection is set return false if not enough of the song has played
             if math.floor(self.playingsong['duration'] * self.seeklimit) / 10 > 24:
                 reqpieces = int(math.floor(480 * self.seeklimit)) / 10
             else:
                 reqpieces = int(math.floor(self.playingsong['duration'] * self.seeklimit)) / 10
-            if main.local['seekprotection'] and \
-            len(self.songpieces) < reqpieces:
+            if main.local['seekprotection'] and len(self.songpieces) < reqpieces:
                 #yes, this is crude
                 log.debug("%s [(%s/%s), %f, (%d/%d)]" % (self.playingsong['name'], self.playingsong['position'], self.playingsong['duration'], float(self.playingsong['position'])/float(self.playingsong['duration']),len(self.songpieces),reqpieces))
                 log.verb("Seeking/late playback, about %d seconds more needs to be played" % ((reqpieces - len(self.songpieces)) * 10))
@@ -235,8 +236,7 @@ class Scrobbler:
                 return True
             if self.playingsong['id'] != self.lastsong['id']:
                 return True
-            if self.playingsong['id'] == self.lastsong['id'] and \
-            self.playingsong['playcount'] != self.lastsong['playcount']:
+            if self.playingsong['id'] == self.lastsong['id'] and self.playingsong['playcount'] != self.lastsong['playcount']:
                 return True
         return False
 
@@ -1363,7 +1363,7 @@ class Main:
         try:
             s.playingsong = itunes.getsong().copy()
             try:
-                if s.handshaked and s.playingsong['id'] != s.lastnowplayedid:
+                if s.handshaked and s.submittable(True) and s.playingsong['id'] != s.lastnowplayedid:
                     s.nowplaying(s.playingsong.copy())
             except:
                 pass # If this fails, it's not the end of the world, so move on.
