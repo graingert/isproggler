@@ -951,7 +951,11 @@ class TaskBarApp(wx.Frame):
                 icon = wxIcon(path.join(self.pathtoself,"data\\normal.ico"), wx.BITMAP_TYPE_ICO)
             #icon = wxEmptyIcon()
             #icon.CopyFromBitmap(wx.BitmapFromImage(wx.ImageFromStream(cStringIO.StringIO(imagesdict['normal.ico']))))
-            if wx.Platform == "__WXMSW__": self.tbi.SetIcon(icon, self.SetIconQuote())
+            if wx.Platform == "__WXMSW__":
+              try:
+                self.tbi.SetIcon(icon, self.SetIconQuote())
+              except:
+                self.tbi.SetIcon(icon, choice(quotes.quotes))
 
     def SetRedIcon(self,slogan):
         if self.iconstatus != 0:
@@ -961,7 +965,11 @@ class TaskBarApp(wx.Frame):
                 icon = wxIcon(path.join(self.pathtoself,"data\\normal.ico"), wx.BITMAP_TYPE_ICO)
             #icon = wxEmptyIcon()
             #icon.CopyFromBitmap(wx.BitmapFromImage(wx.ImageFromStream(cStringIO.StringIO(imagesdict['normal.ico']))))
-            if wx.Platform == "__WXMSW__": self.tbi.SetIcon(icon, slogan)
+            if wx.Platform == "__WXMSW__":
+              try:
+                self.tbi.SetIcon(icon, slogan)
+              except:
+                self.tbi.SetIcon(icon, choice(quotes.quotes))
             self.iconstatus = 0
 
     def SetGreenIcon(self,message):
@@ -972,7 +980,11 @@ class TaskBarApp(wx.Frame):
                 icon = wxIcon(path.join(self.pathtoself,"data\\green.ico"), wx.BITMAP_TYPE_ICO)
             #icon = wxEmptyIcon()
             #icon.CopyFromBitmap(wx.BitmapFromImage(wx.ImageFromStream(cStringIO.StringIO(imagesdict['normal.ico']))))
-            if wx.Platform == "__WXMSW__": self.tbi.SetIcon(icon, message)
+            if wx.Platform == "__WXMSW__":
+              try:
+                self.tbi.SetIcon(icon, message)
+              except:
+                self.tbi.SetIcon(icon, choice(quotes.quotes))
             self.iconstatus = 2
 
     def SetBlueIcon(self,error):
@@ -983,7 +995,11 @@ class TaskBarApp(wx.Frame):
                 icon = wxIcon(path.join(self.pathtoself,"data\\error.ico"), wx.BITMAP_TYPE_ICO)
             #icon = wxEmptyIcon()
             #icon.CopyFromBitmap(wx.BitmapFromImage(wx.ImageFromStream(cStringIO.StringIO(imagesdict['error.ico']))))
-            if wx.Platform == "__WXMSW__": self.tbi.SetIcon(icon, error)
+            if wx.Platform == "__WXMSW__":
+              try:
+                self.tbi.SetIcon(icon, error)
+              except:
+                self.tbi.SetIcon(icon, choice(quotes.quotes))
             self.iconstatus = 1
 
 
