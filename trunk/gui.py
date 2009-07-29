@@ -42,11 +42,12 @@ wxID_DISABLE = 1000
 wxID_PAUSE = 1001
 wxID_LASTFMHOME = 1002
 wxID_LASTFMUSER = 1003
-wxID_PREFS = 1004
-wxID_STATS = 1005
-wxID_EXIT = 1006
-wxID_TIMER = 1007
-wxID_STATSTIMER = 1008
+wxID_LASTFMAPP = 1004
+wxID_PREFS = 1005
+wxID_STATS = 1006
+wxID_EXIT = 1007
+wxID_TIMER = 1008
+wxID_STATSTIMER = 1009
 
 wxID_USERNAME = 2000
 wxID_PASSWORD = 2001
@@ -544,21 +545,22 @@ class TaskBarApp(wx.Frame):
         self.menu = wx.Menu()
         #if main.prefs['ipodsupport']:
         self.submenu = wx.Menu()
-        self.submenu.Append(wxID_IPHONE_AUTO,"Automatic")
-        self.submenu.Append(wxID_IPHONE_MANUAL,"Manual")
-        self.menu.AppendMenu(-1,"Update iPhone/iPod touch",self.submenu)
-        self.menu.Append(wxID_IPOD, "Update iPod"," Update iPod")
+        self.submenu.Append(wxID_IPHONE_AUTO,"&Automatic")
+        self.submenu.Append(wxID_IPHONE_MANUAL,"&Manual")
+        self.menu.AppendMenu(-1,"Update iP&hone/iPod Touch",self.submenu)
+        self.menu.Append(wxID_IPOD, "&Update iPod"," Update iPod")
         self.menu.AppendSeparator()
         self.ipodmenuenabled = True
-        self.menu.Append(wxID_DISABLE, "Disable Submissions"," Disable Submissions")
-        self.menu.Append(wxID_PAUSE, "Pause Submissions"," Pause Submissions")
+        self.menu.Append(wxID_DISABLE, "&Disable Submissions"," Disable Submissions")
+        self.menu.Append(wxID_PAUSE, "Pause Su&bmissions"," Pause Submissions")
         self.menu.AppendSeparator()
-        self.menu.Append(wxID_LASTFMHOME, "Last.fm Homepage"," Go to Last.fm Homepage")
-        self.menu.Append(wxID_LASTFMUSER, "Last.fm User Page"," Go to Last.fm User Page")
+        self.menu.Append(wxID_LASTFMHOME, "&Last.fm Homepage"," Go to Last.fm Homepage")
+        self.menu.Append(wxID_LASTFMUSER, "Last.fm User &Page"," Go to Last.fm User Page")
+        self.menu.Append(wxID_LASTFMAPP, "Last.fm &iSproggler Page"," Go to Last.fm iSproggler Page")
         self.menu.AppendSeparator()
-        self.menu.Append(wxID_STATS, "Statistics"," Show Statistics")
-        self.menu.Append(wxID_PREFS, "Preferences..."," Show Preferences...")
-        self.menu.Append(wxID_EXIT, "Exit"," Quit iSproggler")
+        self.menu.Append(wxID_STATS, "&Statistics"," Show Statistics")
+        self.menu.Append(wxID_PREFS, "Pre&ferences..."," Show Preferences...")
+        self.menu.Append(wxID_EXIT, "E&xit"," Quit iSproggler")
 
         #wx.EVT_MENU(self, wxID_DISABLE, self.OnDisableSubmissions)
         #wx.EVT_MENU(self, wxID_PAUSE, self.OnPauseSubmissions)
@@ -579,6 +581,7 @@ class TaskBarApp(wx.Frame):
         self.tbi.Bind(wx.EVT_MENU, self.OnPauseSubmissions, id=wxID_PAUSE)
         self.tbi.Bind(wx.EVT_MENU, self.OnLastfmHomepage, id=wxID_LASTFMHOME)
         self.tbi.Bind(wx.EVT_MENU, self.OnLastfmUserPage, id=wxID_LASTFMUSER)
+        self.tbi.Bind(wx.EVT_MENU, self.OnLastfmAppPage, id=wxID_LASTFMAPP)
         self.tbi.Bind(wx.EVT_MENU, self.OnStatistics, id=wxID_STATS)
         self.tbi.Bind(wx.EVT_MENU, self.OnPreferences, id=wxID_PREFS)
         self.tbi.Bind(wx.EVT_MENU, self.OnExit, id=wxID_EXIT)
@@ -796,6 +799,13 @@ class TaskBarApp(wx.Frame):
             open_new("http://www.last.fm/user/%s/" % main.prefs['username'])
         except:
             MessageBox(0,"Failed to open address http://www.last.fm/user/%s/ in browser." % main.prefs['username'],"iSproggler",1)
+
+    def OnLastfmAppPage(self, event):
+        #print "Menu: Last.fm App Page"
+        try:
+            open_new("http://www.last.fm/group/iSproggler+Users")
+        except:
+            MessageBox(0,"Failed to open address http://www.last.fm/group/iSproggler+Users in browser.","iSproggler",1)
 
     def OnPreferences(self, event):
         #global prefs
