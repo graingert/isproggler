@@ -33,9 +33,8 @@ import ipod
 import mbid
 
 
-
-_version_ = "1.2.1"
-_build_ = 20090617
+_version_ = "1.3.0"
+_build_ = 20090729
 _threaded_ = False #TODO
 
 local = {'debug': False,
