@@ -107,7 +107,7 @@ def createmsi():
     pass
 
 print "Creating tape archive..."
-targzsource()
+#targzsource()
 print "Moving and deleting files..."
 movefiles()
 print "Deleting .DS_Store files..."
@@ -132,7 +132,7 @@ setup(
     zipfile = None,
     windows = [{"script": os.path.join(root,"main.py"),
                 "dest_base" : "iSproggler",
-                "icon_resources": [(1, ".\\icon.ico")],
+                "icon_resources": [(1, ".\\icon2.ico")],
                 "version": main._version_,
                 "copyright": "",
                 }]
